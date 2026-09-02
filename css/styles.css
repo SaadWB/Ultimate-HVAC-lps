@@ -1114,44 +1114,62 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================================================
-   8. 4-Step Installation Process
+   8. 4-Step Connected Installation Process Flow (01 → 02 → 03 → 04)
    ========================================================================== */
 .process-section {
   background-color: var(--color-bg-subtle);
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
 }
 
-.process-timeline {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+.process-flow-wrapper {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.process-flow-track {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0.65rem;
   position: relative;
 }
 
-.process-timeline::before {
-  content: '';
-  position: absolute;
-  top: 40px;
-  left: 10%;
-  right: 10%;
-  height: 2px;
-  background: repeating-linear-gradient(to right, var(--color-border), var(--color-border) 8px, transparent 8px, transparent 16px);
-  z-index: 1;
-}
-
-.process-step {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 1rem 0.5rem;
-}
-
-.step-number-bubble {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
+.process-step-card {
+  flex: 1 1 0;
   background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  padding: 1.75rem 1.25rem 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all var(--transition-normal);
+  text-align: left;
+}
+
+.process-step-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-cta);
+  box-shadow: var(--shadow-lg);
+}
+
+.step-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.step-num-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
   color: var(--color-primary);
   border: 2px solid var(--color-primary);
   font-family: var(--font-display);
@@ -1160,29 +1178,127 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1.25rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-xs);
   transition: all var(--transition-fast);
 }
 
-.process-step:hover .step-number-bubble {
+.process-step-card:hover .step-num-bubble {
   background: var(--color-cta);
   color: #FFFFFF;
   border-color: var(--color-cta);
-  transform: scale(1.1);
-  box-shadow: var(--shadow-cta);
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px var(--color-cta-shadow);
 }
 
-.process-step h3 {
-  font-size: 1.0625rem;
+.step-icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  color: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.process-step-card:hover .step-icon-badge {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border-color: var(--color-primary);
+}
+
+.step-pill-tag {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-cta);
+  background: var(--color-cta-light);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-full);
   margin-bottom: 0.5rem;
-  color: var(--color-text-title);
 }
 
-.process-step p {
+.step-card-body {
+  flex-grow: 1;
+}
+
+.step-card-body h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-text-title);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.step-card-body p {
   font-size: 0.84375rem;
   color: var(--color-text-muted);
-  line-height: 1.5;
+  line-height: 1.55;
+}
+
+.step-card-milestone {
+  margin-top: 1.25rem;
+  padding-top: 0.875rem;
+  border-top: 1px dashed var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-success);
+}
+
+.step-card-milestone svg {
+  flex-shrink: 0;
+  stroke: var(--color-success);
+}
+
+/* Connecting Arrows between Cards */
+.process-flow-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  position: relative;
+  z-index: 2;
+}
+
+.connector-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: repeating-linear-gradient(to right, var(--color-border-hover), var(--color-border-hover) 6px, transparent 6px, transparent 10px);
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.connector-arrow-head {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1.5px solid var(--color-border);
+  color: var(--color-cta);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  z-index: 2;
+  transition: all var(--transition-fast);
+}
+
+.process-flow-track:hover .connector-arrow-head {
+  border-color: var(--color-cta);
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px var(--color-cta-shadow);
 }
 
 /* ==========================================================================
@@ -2066,13 +2182,13 @@ textarea.form-control {
   }
 
   /* 3. Process Section: 2-Column Layout on Tablet */
-  .process-timeline {
+  .process-flow-track {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 2.25rem 1.5rem !important;
+    gap: 1.5rem !important;
   }
 
-  .process-timeline::before {
+  .process-flow-connector {
     display: none !important;
   }
 
@@ -2158,45 +2274,75 @@ textarea.form-control {
     font-weight: 700 !important;
   }
 
-  /* 3. Hero Section: Mobile Layout */
+  /* 3. Hero Section: Mobile Layout - Perfectly Balanced Left & Right Padding */
   .hero-section {
-    padding-top: 1.5rem !important; /* Equal to the gap between hero content and form section */
+    padding-top: 1.5rem !important;
     padding-bottom: 1.5rem !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
-  .hero-grid {
-    gap: 1.5rem !important;
-  }
-
-  .hero-content {
-    text-align: center;
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  /* 3.1. "Fast Dispatch" Badge Line: STRICT SINGLE LINE (NO WRAPPING) */
-  .hero-badge-pill {
-    display: inline-flex !important;
-    align-items: center !important;
-    white-space: nowrap !important;
-    flex-wrap: nowrap !important;
+  .hero-section > .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    width: 100% !important;
     max-width: 100% !important;
-    margin-bottom: 0.625rem !important;
-    padding: 3px 10px 3px 4px !important;
-    gap: 6px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
     box-sizing: border-box !important;
   }
 
+  .hero-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 1.5rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero-content {
+    text-align: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    overflow: hidden !important;
+  }
+
+  /* 3.1. "Fast Dispatch" Badge Line */
+  .hero-badge-pill {
+    display: inline-flex !important;
+    align-items: center !important;
+    max-width: 100% !important;
+    margin: 0 auto 0.625rem auto !important;
+    padding: 3px 8px 3px 4px !important;
+    gap: 6px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
   .hero-badge-tag {
-    font-size: clamp(0.5625rem, 2.4vw, 0.6875rem) !important;
-    padding: 2px 7px !important;
+    font-size: 0.625rem !important;
+    padding: 2px 6px !important;
     white-space: nowrap !important;
     flex-shrink: 0 !important;
     line-height: 1.1 !important;
   }
 
   .hero-badge-text {
-    font-size: clamp(0.6875rem, 2.9vw, 0.8125rem) !important;
+    font-size: clamp(0.6875rem, 2.7vw, 0.78125rem) !important;
     white-space: nowrap !important;
     flex-shrink: 1 !important;
     overflow: hidden !important;
@@ -2204,47 +2350,72 @@ textarea.form-control {
     line-height: 1.2 !important;
   }
 
-  /* 3.2. H1 Heading: Slightly Increased Font Size on Mobile */
+  /* 3.2. H1 Heading */
   .hero-title {
-    font-size: clamp(1.85rem, 7.2vw, 2.35rem) !important;
+    font-size: clamp(1.75rem, 6.8vw, 2.25rem) !important;
     line-height: 1.14 !important;
     font-weight: 900 !important;
-    margin-bottom: 0.6rem !important;
+    margin: 0 auto 0.6rem auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
     letter-spacing: -0.025em !important;
+    word-break: break-word !important;
   }
 
   /* 3.3. Description */
   .hero-subtitle {
     font-size: 0.8125rem !important;
     line-height: 1.35 !important;
-    margin-bottom: 0.75rem !important;
+    margin: 0 auto 0.75rem auto !important;
+    width: 100% !important;
     max-width: 100% !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
   }
 
-  /* 3.4. Checkpoints (2x2 grid) */
+  /* 3.4. Checkpoints (2x2 grid with minmax(0, 1fr) so cells shrink smoothly) */
   .hero-checkpoints-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 6px !important;
-    margin-bottom: 0.75rem !important;
+    margin: 0 auto 0.75rem auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .checkpoint-pill {
-    padding: 6px 8px !important;
-    font-size: 0.71875rem !important;
-    gap: 5px !important;
+    min-width: 0 !important;
+    padding: 6px 6px !important;
+    font-size: clamp(0.65625rem, 2.5vw, 0.71875rem) !important;
+    gap: 4px !important;
     border-radius: 6px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .checkpoint-pill span {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .checkpoint-pill svg {
-    width: 14px !important;
-    height: 14px !important;
+    width: 13px !important;
+    height: 13px !important;
+    flex-shrink: 0 !important;
   }
 
   /* 3.5. Google Rating Pill */
   .hero-google-rating-pill {
-    padding: 4px 14px !important;
-    margin-bottom: 0.75rem !important;
-    gap: 8px !important;
+    display: inline-flex !important;
+    padding: 4px 12px !important;
+    margin: 0 auto 0.75rem auto !important;
+    gap: 6px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .rating-stars-inline {
@@ -2253,8 +2424,8 @@ textarea.form-control {
   }
 
   .rating-stars-inline svg {
-    width: 12px !important;
-    height: 12px !important;
+    width: 11px !important;
+    height: 11px !important;
   }
 
   .rating-subtext {
@@ -2263,48 +2434,84 @@ textarea.form-control {
 
   /* 3.6. CTA buttons */
   .hero-cta-buttons {
-    grid-template-columns: repeat(2, 1fr) !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 8px !important;
-    margin-bottom: 0.875rem !important;
+    margin: 0 auto 0.875rem auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .btn-hero-call,
   .btn-hero-request {
-    padding: 0.65rem 0.6rem !important;
-    font-size: 0.8125rem !important;
+    min-width: 0 !important;
+    padding: 0.65rem 0.35rem !important;
+    font-size: clamp(0.71875rem, 3.1vw, 0.8125rem) !important;
     border-radius: 8px !important;
-    gap: 6px !important;
+    gap: 4px !important;
+    box-sizing: border-box !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .btn-hero-call span,
+  .btn-hero-request span {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .btn-hero-call svg,
   .btn-hero-request svg {
-    width: 15px !important;
-    height: 15px !important;
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0 !important;
   }
 
   /* 3.7. Trust Indicators */
   .hero-trust-indicators {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     padding-top: 10px !important;
-    gap: 6px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: 4px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .trust-indicator-item {
+    min-width: 0 !important;
+    padding: 0 2px !important;
+    box-sizing: border-box !important;
   }
 
   .trust-indicator-icon {
-    width: 28px !important;
-    height: 28px !important;
+    width: 26px !important;
+    height: 26px !important;
     margin-bottom: 2px !important;
   }
 
   .trust-indicator-icon svg {
-    width: 16px !important;
-    height: 16px !important;
+    width: 14px !important;
+    height: 14px !important;
   }
 
   .trust-indicator-item h4 {
-    font-size: 0.6875rem !important;
+    font-size: clamp(0.625rem, 2.4vw, 0.6875rem) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .trust-indicator-item p {
-    font-size: 0.625rem !important;
+    font-size: clamp(0.5625rem, 2.1vw, 0.625rem) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   /* 4. Form Section: 20px padding inside form container */
@@ -2513,10 +2720,42 @@ textarea.form-control {
     gap: 1.25rem !important;
   }
 
-  /* Process Timeline Mobile */
-  .process-timeline {
-    grid-template-columns: 1fr !important;
-    gap: 1.25rem !important;
+  /* Process Section Mobile: Vertical Connected Flow */
+  .process-flow-track {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    position: relative !important;
+  }
+
+  .process-step-card {
+    padding: 1.25rem 1rem !important;
+  }
+
+  .process-flow-connector {
+    flex: 0 0 24px !important;
+    height: 24px !important;
+    margin: -0.25rem auto !important;
+  }
+
+  .connector-line {
+    width: 2px !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: repeating-linear-gradient(to bottom, var(--color-border-hover), var(--color-border-hover) 4px, transparent 4px, transparent 8px) !important;
+  }
+
+  .connector-arrow-head {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .connector-arrow-head svg {
+    width: 14px !important;
+    height: 14px !important;
+    transform: rotate(90deg) !important;
   }
 
   /* 7. "Local & Trust" (Why Section): 2-Column Badges & Cards */
