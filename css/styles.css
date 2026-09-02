@@ -80,7 +80,9 @@
 }
 
 /* --- Base & Reset --- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -102,7 +104,8 @@ body {
   position: relative;
 }
 
-img, svg {
+img,
+svg {
   display: block;
   max-width: 100%;
 }
@@ -113,7 +116,10 @@ a {
   transition: color var(--transition-fast);
 }
 
-button, input, select, textarea {
+button,
+input,
+select,
+textarea {
   font-family: inherit;
   font-size: inherit;
 }
@@ -138,8 +144,8 @@ button, input, select, textarea {
 }
 
 .section-padding {
-  padding-top: clamp(4.5rem, 8vw, 7.5rem);
-  padding-bottom: clamp(4.5rem, 8vw, 7.5rem);
+  padding-top: clamp(4.5rem, 8vw, 5.5rem);
+  padding-bottom: clamp(4.5rem, 8vw, 5.5rem);
 }
 
 .section-padding-sm {
@@ -148,7 +154,12 @@ button, input, select, textarea {
 }
 
 /* --- Typography System --- */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   color: var(--color-text-title);
   font-weight: 700;
@@ -353,9 +364,20 @@ p {
 }
 
 @keyframes pulseGreen {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
 }
 
 .top-bar-right {
@@ -548,12 +570,10 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 29, 57, 0.95) 0%,
-    rgba(0, 29, 57, 0.88) 45%,
-    rgba(0, 18, 36, 0.75) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(0, 29, 57, 0.95) 0%,
+      rgba(0, 29, 57, 0.88) 45%,
+      rgba(0, 18, 36, 0.75) 100%);
 }
 
 .hero-container {
@@ -748,7 +768,7 @@ p {
   margin-bottom: 2rem;
 }
 
-.intro-body-copy p + p {
+.intro-body-copy p+p {
   margin-top: 1rem;
 }
 
@@ -1080,12 +1100,10 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 29, 57, 0.96) 0%,
-    rgba(0, 29, 57, 0.90) 50%,
-    rgba(0, 29, 57, 0.70) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(0, 29, 57, 0.96) 0%,
+      rgba(0, 29, 57, 0.90) 50%,
+      rgba(0, 29, 57, 0.70) 100%);
 }
 
 .comfort-container {
@@ -1758,12 +1776,13 @@ p {
    ========================================================================== */
 .faq-section {
   background-color: var(--color-bg-page);
+  padding-bottom: 0 !important;
 }
 
 .faq-header-wrap {
   text-align: center;
   max-width: 680px;
-  margin: 0 auto 3.5rem auto;
+  margin: 0 auto 2.5rem auto;
 }
 
 .faq-accordion-container {
@@ -1847,6 +1866,7 @@ p {
 .conversion-section {
   background: linear-gradient(180deg, var(--color-bg-page) 0%, var(--color-bg-subtle) 100%);
   position: relative;
+  padding-top: 2.25rem !important;
 }
 
 .conversion-grid {
@@ -2161,6 +2181,7 @@ textarea.form-control {
    ========================================================================== */
 
 @media (max-width: 1080px) {
+
   .hero-layout-grid,
   .intro-grid,
   .experience-grid,
@@ -2212,7 +2233,8 @@ textarea.form-control {
   }
 
   /* Global Container & Zero Horizontal Scroll (using clip for reliable sticky header) */
-  html, body {
+  html,
+  body {
     overflow-x: clip !important;
     width: 100% !important;
     max-width: 100vw !important;
@@ -2259,7 +2281,7 @@ textarea.form-control {
   /* 8. Get Started Section — Remove Top Padding */
   #request-service,
   .conversion-section {
-    padding-top: 0 !important;
+    padding-top: 200px !important;
   }
 
   /* 2. Mobile Sticky Header with High-Visibility Logo & Phone */
@@ -2547,7 +2569,7 @@ textarea.form-control {
   .supporting-review-card,
   .faq-accordion-item,
   .replace-closing-cta-card,
-  .intro-pillars-grid > div {
+  .intro-pillars-grid>div {
     padding: 16px !important;
     border-radius: var(--radius-md) !important;
   }
