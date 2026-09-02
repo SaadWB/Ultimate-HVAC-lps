@@ -1,370 +1,245 @@
 /**
- * Ultimate HVAC - AC Installation Landing Page JavaScript
- * High-performance conversion handlers, accordion, form validation, and filters
+ * Ultimate HVAC - AC Installation Landing Page Scripts
+ * Handles Header scroll state, Mobile navigation, FAQ accordion,
+ * Smooth scrolling, and Form validation & submission.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initHeaderScroll();
-  initSmoothScrollCTAs();
-  initFaqAccordion();
-  initServiceAreaFilter();
-  initServiceRequestForm();
-  initServiceCardPreselection();
-  initReviewsCarousel();
-});
-
-/* --- 1. Header Scroll Shadow Effect --- */
-function initHeaderScroll() {
-  const header = document.querySelector('.site-header');
-  if (!header) return;
-
-  const handleScroll = () => {
-    if (window.scrollY > 20) {
+  // --- 1. Sticky Header State on Scroll ---
+  const header = document.getElementById('main-header');
+  
+  function updateHeaderScroll() {
+    if (!header) return;
+    if (window.scrollY > 40) {
       header.classList.add('scrolled');
     } else {
       header.classList.remove('scrolled');
     }
-  };
+  }
 
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  handleScroll();
-}
+  window.addEventListener('scroll', updateHeaderScroll, { passive: true });
+  updateHeaderScroll();
 
-/* --- 2. Smooth Scroll to Request Service Form with Autofocus --- */
-function initSmoothScrollCTAs() {
-  const ctaButtons = document.querySelectorAll('a[href^="#request-service"]');
-  const formSection = document.getElementById('request-service');
-  const nameInput = document.getElementById('fullname');
+  // --- 2. Mobile Nav Drawer Toggle ---
+  const menuToggle = document.getElementById('mobile-menu-btn');
+  const navDrawer = document.getElementById('mobile-nav-drawer');
 
-  ctaButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (formSection) {
+  if (menuToggle && navDrawer) {
+    menuToggle.addEventListener('click', () => {
+      const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', !isExpanded);
+      navDrawer.classList.toggle('active');
+    });
+
+    // Close mobile nav when clicking any link
+    const mobileLinks = navDrawer.querySelectorAll('a');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.setAttribute('aria-expanded', 'false');
+        navDrawer.classList.remove('active');
+      });
+    });
+  }
+
+  // --- 3. Accessible FAQ Accordion ---
+  const accordionItems = document.querySelectorAll('.faq-accordion-item');
+
+  accordionItems.forEach(item => {
+    const trigger = item.querySelector('.faq-accordion-trigger');
+    const content = item.querySelector('.faq-accordion-content');
+
+    if (trigger && content) {
+      trigger.addEventListener('click', () => {
+        const isOpen = item.classList.contains('active');
+
+        // Close other open accordion items for a cleaner editorial experience
+        accordionItems.forEach(otherItem => {
+          if (otherItem !== item && otherItem.classList.contains('active')) {
+            otherItem.classList.remove('active');
+            const otherTrigger = otherItem.querySelector('.faq-accordion-trigger');
+            const otherContent = otherItem.querySelector('.faq-accordion-content');
+            if (otherTrigger) otherTrigger.setAttribute('aria-expanded', 'false');
+            if (otherContent) otherContent.style.maxHeight = null;
+          }
+        });
+
+        // Toggle current item
+        if (isOpen) {
+          item.classList.remove('active');
+          trigger.setAttribute('aria-expanded', 'false');
+          content.style.maxHeight = null;
+        } else {
+          item.classList.add('active');
+          trigger.setAttribute('aria-expanded', 'true');
+          content.style.maxHeight = content.scrollHeight + 'px';
+        }
+      });
+    }
+  });
+
+  // Open first FAQ by default on desktop
+  if (window.innerWidth > 768 && accordionItems.length > 0) {
+    const firstItem = accordionItems[0];
+    const firstTrigger = firstItem.querySelector('.faq-accordion-trigger');
+    const firstContent = firstItem.querySelector('.faq-accordion-content');
+    if (firstItem && firstTrigger && firstContent) {
+      firstItem.classList.add('active');
+      firstTrigger.setAttribute('aria-expanded', 'true');
+      firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+    }
+  }
+
+  // --- 4. Smooth Anchor Scrolling with Header Offset ---
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        e.preventDefault();
         const headerOffset = 80;
-        const elementPosition = formSection.getBoundingClientRect().top;
+        const elementPosition = targetElement.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
         window.scrollTo({
           top: offsetPosition,
           behavior: 'smooth'
         });
-
-        // Focus the name input after scroll
-        setTimeout(() => {
-          if (nameInput) nameInput.focus();
-        }, 600);
       }
     });
   });
-}
 
-/* --- 3. Pre-select Service Dropdown When Clicking Specific Service Card CTAs --- */
-function initServiceCardPreselection() {
-  const serviceCards = document.querySelectorAll('[data-service-preset]');
-  const serviceSelect = document.getElementById('service_type');
+  // --- 5. Service Request Forms Validation & Submission ---
+  const allForms = document.querySelectorAll('.ac-service-request-form, #ac-service-request-form');
 
-  serviceCards.forEach(card => {
-    card.addEventListener('click', (e) => {
-      const presetValue = card.getAttribute('data-service-preset');
-      if (serviceSelect && presetValue) {
-        serviceSelect.value = presetValue;
-      }
-    });
-  });
-}
-
-/* --- 4. Interactive Accessible FAQ Accordion --- */
-function initFaqAccordion() {
-  const faqItems = document.querySelectorAll('.faq-item');
-
-  faqItems.forEach(item => {
-    const questionBtn = item.querySelector('.faq-question-btn');
-    const answerWrapper = item.querySelector('.faq-answer-wrapper');
-
-    if (!questionBtn || !answerWrapper) return;
-
-    questionBtn.addEventListener('click', () => {
-      const isActive = item.classList.contains('active');
-
-      // Close all other accordions
-      faqItems.forEach(otherItem => {
-        if (otherItem !== item && otherItem.classList.contains('active')) {
-          otherItem.classList.remove('active');
-          const otherBtn = otherItem.querySelector('.faq-question-btn');
-          const otherWrapper = otherItem.querySelector('.faq-answer-wrapper');
-          if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
-          if (otherWrapper) otherWrapper.style.maxHeight = null;
-        }
-      });
-
-      // Toggle current
-      if (isActive) {
-        item.classList.remove('active');
-        questionBtn.setAttribute('aria-expanded', 'false');
-        answerWrapper.style.maxHeight = null;
-      } else {
-        item.classList.add('active');
-        questionBtn.setAttribute('aria-expanded', 'true');
-        answerWrapper.style.maxHeight = answerWrapper.scrollHeight + 'px';
-      }
-    });
-  });
-}
-
-/* --- 5. Live Service Area Search & Filter --- */
-function initServiceAreaFilter() {
-  const searchInput = document.getElementById('area-search');
-  const areaChips = document.querySelectorAll('.area-chip');
-  const noMatchNotice = document.getElementById('area-no-match');
-
-  if (!searchInput || !areaChips.length) return;
-
-  searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase().trim();
-    let matchesCount = 0;
-
-    areaChips.forEach(chip => {
-      const areaName = chip.textContent.toLowerCase().trim();
-      if (query === '' || areaName.includes(query)) {
-        chip.style.display = 'inline-flex';
-        matchesCount++;
-      } else {
-        chip.style.display = 'none';
-      }
-    });
-
-    if (noMatchNotice) {
-      if (matchesCount === 0 && query !== '') {
-        noMatchNotice.style.display = 'block';
-      } else {
-        noMatchNotice.style.display = 'none';
-      }
-    }
-  });
-
-  // Clicking an area chip auto-fills the Address/City field in the request form
-  const addressInput = document.getElementById('address');
-  areaChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      const location = chip.getAttribute('data-location') || chip.textContent.trim();
-      if (addressInput) {
-        addressInput.value = location + ', IL';
-        addressInput.dispatchEvent(new Event('input'));
-      }
-      
-      const formSection = document.getElementById('request-service');
-      if (formSection) {
-        const headerOffset = 80;
-        const offsetPosition = formSection.getBoundingClientRect().top + window.pageYOffset - headerOffset;
-        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-        setTimeout(() => { if (addressInput) addressInput.focus(); }, 600);
-      }
-    });
-  });
-}
-
-/* --- 6. Request Service Form Validation & Instant Client-Side Confirmation --- */
-function initServiceRequestForm() {
-  const form = document.getElementById('ac-service-request-form');
-  const formCard = document.getElementById('service-form-inner');
-  const successState = document.getElementById('service-form-success');
-  const resetBtn = document.getElementById('reset-form-btn');
-  const phoneInput = document.getElementById('phone');
-
-  if (!form) return;
-
-  // Phone number auto-formatter: (XXX) XXX-XXXX
-  if (phoneInput) {
-    phoneInput.addEventListener('input', (e) => {
-      let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-      e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
-  }
-
-  // Form submission handler
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    let isValid = true;
-
-    // Validate Full Name
-    const name = document.getElementById('fullname');
-    if (!name.value.trim()) {
-      showError(name, 'Please enter your full name');
-      isValid = false;
-    } else {
-      clearError(name);
-    }
-
-    // Validate Phone Number
+  allForms.forEach(form => {
+    // Input format helper for phone
+    const phoneInput = form.querySelector('input[type="tel"], [name="phone"]');
     if (phoneInput) {
-      const cleanPhone = phoneInput.value.replace(/\D/g, '');
-      if (cleanPhone.length < 10) {
-        showError(phoneInput, 'Please enter a valid 10-digit phone number');
+      phoneInput.addEventListener('input', (e) => {
+        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        if (x) {
+          e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        }
+      });
+    }
+
+    // Clear error states on input
+    form.querySelectorAll('input, select, textarea').forEach(field => {
+      field.addEventListener('input', () => {
+        const group = field.closest('.form-group');
+        if (group) group.classList.remove('has-error');
+      });
+      field.addEventListener('change', () => {
+        const group = field.closest('.form-group');
+        if (group) group.classList.remove('has-error');
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      let isValid = true;
+
+      // Validate Full Name
+      const nameField = form.querySelector('[name="fullname"]');
+      if (nameField && nameField.value.trim().length < 2) {
+        const group = nameField.closest('.form-group');
+        if (group) group.classList.add('has-error');
         isValid = false;
-      } else {
-        clearError(phoneInput);
       }
-    }
 
-    // Validate Email
-    const email = document.getElementById('email');
-    if (email && email.value.trim()) {
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(email.value.trim())) {
-        showError(email, 'Please enter a valid email address');
+      // Validate Phone Number
+      const cleanPhone = phoneInput ? phoneInput.value.replace(/\D/g, '') : '';
+      if (!phoneInput || cleanPhone.length < 10) {
+        const group = phoneInput ? phoneInput.closest('.form-group') : null;
+        if (group) group.classList.add('has-error');
         isValid = false;
-      } else {
-        clearError(email);
       }
-    }
 
-    // Validate Service Type
-    const serviceType = document.getElementById('service_type');
-    if (serviceType && !serviceType.value) {
-      showError(serviceType, 'Please select a service');
-      isValid = false;
-    } else if (serviceType) {
-      clearError(serviceType);
-    }
+      // Validate Service Needed
+      const serviceField = form.querySelector('[name="service_type"]');
+      if (serviceField && !serviceField.value) {
+        const group = serviceField.closest('.form-group');
+        if (group) group.classList.add('has-error');
+        isValid = false;
+      }
 
-    if (!isValid) return;
-
-    // Simulate submission state
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.innerHTML;
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = `
-      <svg class="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;">
-        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
-      </svg>
-      Submitting Request...
-    `;
-
-    setTimeout(() => {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = originalBtnText;
-
-      // Show confirmed success view
-      if (formCard && successState) {
-        formCard.style.display = 'none';
-        successState.style.display = 'block';
-
-        const summaryEl = document.getElementById('submitted-customer-summary');
-        if (summaryEl) {
-          summaryEl.innerHTML = `Thank you, <strong>${escapeHtml(name.value.trim())}</strong>! A licensed Ultimate HVAC specialist will call you at <strong>${escapeHtml(phoneInput.value.trim())}</strong> shortly to confirm your service window.`;
+      // Validate Email (if provided)
+      const emailField = form.querySelector('[name="email"]');
+      if (emailField && emailField.value.trim().length > 0) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailField.value.trim())) {
+          const group = emailField.closest('.form-group');
+          if (group) group.classList.add('has-error');
+          isValid = false;
         }
       }
-    }, 700);
-  });
 
-  // Reset form button
-  if (resetBtn && formCard && successState) {
-    resetBtn.addEventListener('click', () => {
-      form.reset();
-      successState.style.display = 'none';
-      formCard.style.display = 'block';
-    });
-  }
-}
-
-function showError(inputEl, message) {
-  inputEl.classList.add('error');
-  const errorEl = inputEl.nextElementSibling;
-  if (errorEl && errorEl.classList.contains('field-error')) {
-    errorEl.textContent = message;
-    errorEl.style.display = 'block';
-  }
-}
-
-function clearError(inputEl) {
-  inputEl.classList.remove('error');
-  const errorEl = inputEl.nextElementSibling;
-  if (errorEl && errorEl.classList.contains('field-error')) {
-    errorEl.style.display = 'none';
-  }
-}
-
-function escapeHtml(text) {
-  const map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
-  };
-  return text.replace(/[&<>"']/g, m => map[m]);
-}
-
-/* --- 7. Reviews Section Interactive Carousel / Slider --- */
-function initReviewsCarousel() {
-  const track = document.getElementById('reviews-carousel-track');
-  const prevBtn = document.getElementById('reviews-prev-btn');
-  const nextBtn = document.getElementById('reviews-next-btn');
-  const dots = document.querySelectorAll('.reviews-dot');
-  const cards = document.querySelectorAll('.reviews-carousel-track .review-card');
-
-  if (!track || !cards.length) return;
-
-  let currentIndex = 0;
-  const totalCards = cards.length;
-
-  function updateActiveDot(index) {
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === index);
-      dot.setAttribute('aria-selected', idx === index ? 'true' : 'false');
-    });
-  }
-
-  function scrollToCard(index) {
-    if (index < 0) index = 0;
-    if (index >= totalCards) index = totalCards - 1;
-    currentIndex = index;
-
-    const targetCard = cards[currentIndex];
-    if (targetCard) {
-      const trackPadding = 16;
-      track.scrollTo({
-        left: targetCard.offsetLeft - trackPadding,
-        behavior: 'smooth'
-      });
-      updateActiveDot(currentIndex);
-    }
-  }
-
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      const newIndex = currentIndex > 0 ? currentIndex - 1 : totalCards - 1;
-      scrollToCard(newIndex);
-    });
-  }
-
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      const newIndex = currentIndex < totalCards - 1 ? currentIndex + 1 : 0;
-      scrollToCard(newIndex);
-    });
-  }
-
-  dots.forEach(dot => {
-    dot.addEventListener('click', () => {
-      const slideIndex = parseInt(dot.getAttribute('data-slide') || '0', 10);
-      scrollToCard(slideIndex);
-    });
-  });
-
-  // Track native touch scrolling and update dots dynamically
-  let scrollTimeout;
-  track.addEventListener('scroll', () => {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      const scrollLeft = track.scrollLeft;
-      const cardWidth = cards[0].offsetWidth;
-      const newIndex = Math.round(scrollLeft / cardWidth);
-      if (newIndex >= 0 && newIndex < totalCards && newIndex !== currentIndex) {
-        currentIndex = newIndex;
-        updateActiveDot(currentIndex);
+      if (!isValid) {
+        const firstError = form.querySelector('.has-error input, .has-error select');
+        if (firstError) firstError.focus();
+        return;
       }
-    }, 80);
-  }, { passive: true });
-}
 
+      // Form is valid — show loading state on button
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="spin" style="animation: spin 1s linear infinite;"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+          Submitting...
+        `;
+      }
+
+      // Process Submission (mock/storage and redirect to Thank You page)
+      setTimeout(() => {
+        try {
+          const addressField = form.querySelector('[name="address"]');
+          const timeField = form.querySelector('[name="preferred_time"]');
+          const notesField = form.querySelector('[name="notes"]');
+
+          const formData = {
+            name: nameField ? nameField.value.trim() : '',
+            phone: phoneInput ? phoneInput.value.trim() : '',
+            email: emailField ? emailField.value.trim() : '',
+            address: addressField ? addressField.value.trim() : '',
+            service: serviceField ? serviceField.value : '',
+            preferredTime: timeField ? timeField.value : '',
+            notes: notesField ? notesField.value.trim() : '',
+            timestamp: new Date().toISOString()
+          };
+          sessionStorage.setItem('ultimate_hvac_request', JSON.stringify(formData));
+        } catch (err) {
+          console.warn('Session storage write error:', err);
+        }
+
+        // Check if thank-you page is available, otherwise show inline success state
+        if (window.location.hostname !== '' && !window.location.protocol.startsWith('file')) {
+          window.location.href = '/thank-you';
+        } else {
+          // Inline success display for local preview
+          const cardParent = form.closest('.service-form-card');
+          const formSuccessBox = document.getElementById('service-form-success');
+          if (cardParent && formSuccessBox && cardParent.contains(formSuccessBox)) {
+            form.style.display = 'none';
+            formSuccessBox.style.display = 'block';
+            formSuccessBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            form.innerHTML = `
+              <div style="text-align: center; padding: 2rem 1rem;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background: #DCFCE7; color: #16A34A; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <h4 style="font-size: 1.25rem; font-weight: 700; color: #001D39; margin-bottom: 0.5rem;">Request Received!</h4>
+                <p style="font-size: 0.9rem; color: #64748B; margin-bottom: 1rem;">Our dispatch team will contact you shortly.</p>
+                <a href="tel:773-420-6060" class="btn btn-secondary btn-sm">(773) 420-6060</a>
+              </div>
+            `;
+          }
+        }
+      }, 700);
+    });
+  });
+});
