@@ -11,10 +11,11 @@
   <!-- OpenGraph Metadata -->
   <meta property="og:title" content="Thank You | Ultimate HVAC">
   <meta property="og:description" content="Your AC installation service request has been received. Our team will review your details and get in touch with you soon.">
-  <meta property="og:image" content="../assets/images/hero-ac-installation.jpg">
+  <meta property="og:image" content="/assets/images/hero-ac-installation.jpg">
   <meta property="og:type" content="website">
 
-  <!-- Dedicated Stylesheet -->
+  <!-- Dedicated Stylesheet (Dual live & local resolver) -->
+  <link rel="stylesheet" href="/thank-you/thank-you.css">
   <link rel="stylesheet" href="thank-you.css">
 
   <!-- Schema.org LocalBusiness Structured Data -->
@@ -70,7 +71,7 @@
   <header class="site-header" id="main-header">
     <div class="container header-inner">
       <a href="../ac-installation/" class="logo-wrapper" id="header-logo-link" aria-label="Ultimate HVAC Homepage">
-        <img src="../assets/images/logo.png" alt="Ultimate HVAC Logo" class="brand-logo" width="220" height="44">
+        <img src="/assets/images/logo.png" onerror="if(this.src.indexOf('/assets/')!==-1){this.src='../assets/images/logo.png';}" alt="Ultimate HVAC Logo" class="brand-logo" width="220" height="44">
       </a>
 
       <div class="header-ctas">
@@ -301,7 +302,7 @@
   <footer class="site-footer simple-footer">
     <div class="container footer-simple-inner">
       <div class="footer-simple-left">
-        <img src="../assets/images/logo.png" alt="Ultimate HVAC Logo" class="footer-mini-logo" width="140" height="28">
+        <img src="/assets/images/logo.png" onerror="if(this.src.indexOf('/assets/')!==-1){this.src='../assets/images/logo.png';}" alt="Ultimate HVAC Logo" class="footer-mini-logo" width="140" height="28">
         <span>© 2026 Ultimate HVAC. All Rights Reserved. Family owned & operated in Skokie, IL since 2015.</span>
       </div>
       <div class="footer-simple-right">
@@ -315,7 +316,8 @@
     </div>
   </footer>
 
-  <!-- Dedicated JavaScript -->
-  <script src="thank-you.js"></script>
+  <!-- Dedicated JavaScript (Dual live & local resolver) -->
+  <script src="/thank-you/thank-you.js" defer></script>
+  <script src="thank-you.js" defer></script>
 </body>
 </html>

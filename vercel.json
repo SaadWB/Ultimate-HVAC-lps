@@ -1,7 +1,16 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
-  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/thank-you.css",
+      "destination": "/thank-you/thank-you.css"
+    },
+    {
+      "source": "/thank-you.js",
+      "destination": "/thank-you/thank-you.js"
+    }
+  ],
   "redirects": [
     {
       "source": "/",
