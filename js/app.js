@@ -142,8 +142,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let isValid = true;
 
-      // Validate Full Name
+      // Validate First Name / Last Name or Full Name
+      const firstNameField = form.querySelector('[name="firstname"]');
+      const lastNameField = form.querySelector('[name="lastname"]');
       const nameField = form.querySelector('[name="fullname"]');
+
+      if (firstNameField && firstNameField.value.trim().length < 1) {
+        const group = firstNameField.closest('.form-group');
+        if (group) group.classList.add('has-error');
+        isValid = false;
+      }
+
+      if (lastNameField && lastNameField.value.trim().length < 1) {
+        const group = lastNameField.closest('.form-group');
+        if (group) group.classList.add('has-error');
+        isValid = false;
+      }
+
       if (nameField && nameField.value.trim().length < 2) {
         const group = nameField.closest('.form-group');
         if (group) group.classList.add('has-error');
@@ -166,14 +181,22 @@ document.addEventListener('DOMContentLoaded', () => {
         isValid = false;
       }
 
-      // Validate Email (if provided)
+      // Validate Email (if required or provided)
       const emailField = form.querySelector('[name="email"]');
-      if (emailField && emailField.value.trim().length > 0) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailField.value.trim())) {
+      if (emailField) {
+        const emailValue = emailField.value.trim();
+        const isRequired = emailField.hasAttribute('required');
+        if (isRequired && emailValue.length === 0) {
           const group = emailField.closest('.form-group');
           if (group) group.classList.add('has-error');
           isValid = false;
+        } else if (emailValue.length > 0) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(emailValue)) {
+            const group = emailField.closest('.form-group');
+            if (group) group.classList.add('has-error');
+            isValid = false;
+          }
         }
       }
 
@@ -197,14 +220,22 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         try {
           const addressField = form.querySelector('[name="address"]');
+          const zipField = form.querySelector('[name="zip"]');
           const timeField = form.querySelector('[name="preferred_time"]');
           const notesField = form.querySelector('[name="notes"]');
 
+          const finalName = nameField 
+            ? nameField.value.trim() 
+            : `${firstNameField ? firstNameField.value.trim() : ''} ${lastNameField ? lastNameField.value.trim() : ''}`.trim();
+
           const formData = {
-            name: nameField ? nameField.value.trim() : '',
+            name: finalName,
+            firstName: firstNameField ? firstNameField.value.trim() : '',
+            lastName: lastNameField ? lastNameField.value.trim() : '',
             phone: phoneInput ? phoneInput.value.trim() : '',
             email: emailField ? emailField.value.trim() : '',
             address: addressField ? addressField.value.trim() : '',
+            zip: zipField ? zipField.value.trim() : '',
             service: serviceField ? serviceField.value : '',
             preferredTime: timeField ? timeField.value : '',
             notes: notesField ? notesField.value.trim() : '',
